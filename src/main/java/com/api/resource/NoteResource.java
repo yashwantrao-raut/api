@@ -38,7 +38,7 @@ public class NoteResource {
     @UnitOfWork
     public Response post(@PathParam("userID")Long userId, @Valid  NoteReq noteReq){
         Note note = noteDao.save(userId, converter.convertToDomain(noteReq));
-        return Response.ok(converter.convertFromDomain(note)).build();
+        return Response.ok(converter.convertFromDomain(note)).status(Response.Status.CREATED).build();
     }
 
 }
