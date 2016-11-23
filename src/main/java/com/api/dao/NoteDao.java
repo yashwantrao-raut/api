@@ -19,4 +19,8 @@ public class NoteDao extends AbstractDAO<Note>{
     public Note get(Long noteId){
         return super.get(noteId);
     }
+
+    public Note update(Note note){
+        return super.persist(note);
+    }
 }

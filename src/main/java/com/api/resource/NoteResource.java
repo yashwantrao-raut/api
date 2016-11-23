@@ -5,6 +5,7 @@ import com.api.dao.NoteDao;
 import com.api.domain.Note;
 import com.api.resource.req.NoteReq;
 import io.dropwizard.hibernate.UnitOfWork;
+import org.joda.time.DateTime;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -22,6 +23,19 @@ public class NoteResource {
     public NoteResource(NoteToAndFromDomainConverter converter,NoteDao noteDao) {
         this.converter = converter;
         this.noteDao=noteDao;
+    }
+    @PUT
+    @Path("/{noteId}")
+    @UnitOfWork
+    public Response put(@PathParam("userID")Long userId,@PathParam("noteId") Long noteId,NoteReq noteReq){
+        Note note = noteDao.get(noteId);
+        note.setText(noteReq.getNote());
+        note.setTitle(noteReq.getTitle());
+        note.setLastUpdateTime(DateTime.now());
+
+        Note updatedNote = noteDao.update(note);
+
+        return Response.ok(converter.convertFromDomain(updatedNote)).build();
     }
 
 
