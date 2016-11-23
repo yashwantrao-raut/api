@@ -11,6 +11,7 @@ import com.api.domain.User;
 import com.api.resource.NoteResource;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
@@ -40,6 +41,7 @@ public class Main extends Application<ApiConfig> {
                         .setRealm("SUPER SECRET STUFF")
                         .buildAuthFilter());
         environment.jersey().register(authDynamicFeature);
+        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserPrincipal.class));
         environment.jersey().register(new NoteResource(new NoteToAndFromDomainConverter(),new NoteDao(hibernate.getSessionFactory())));
     }
 
