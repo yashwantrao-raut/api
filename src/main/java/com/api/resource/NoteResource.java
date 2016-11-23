@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 public class NoteResource {
 
     @POST
-    public Response post(@PathParam("userID") Long userId, NoteReq noteReq){
+    public Response post(@PathParam("userID")Long userId, NoteReq noteReq){
         return Response.ok().build();
     }
 
