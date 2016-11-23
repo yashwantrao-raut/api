@@ -1,9 +1,11 @@
 package com.api.resource;
 
+import com.api.auth.UserPrincipal;
 import com.api.converter.NoteToAndFromDomainConverter;
 import com.api.dao.NoteDao;
 import com.api.domain.Note;
 import com.api.resource.req.NoteReq;
+import io.dropwizard.auth.Auth;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.joda.time.DateTime;
 
@@ -28,7 +30,7 @@ public class NoteResource {
     @DELETE
     @Path("/{noteId}")
     @UnitOfWork
-    public Response delete(@PathParam("userID")Long userId,@PathParam("noteId") Long noteId){
+    public Response delete(@Auth UserPrincipal userPrincipal,@PathParam("userID")Long userId,@PathParam("noteId") Long noteId){
         noteDao.delete(noteId);
         return Response.ok().build();
     }
@@ -36,7 +38,7 @@ public class NoteResource {
     @PUT
     @Path("/{noteId}")
     @UnitOfWork
-    public Response put(@PathParam("userID")Long userId,@PathParam("noteId") Long noteId,NoteReq noteReq){
+    public Response put(@Auth UserPrincipal userPrincipal,@PathParam("userID")Long userId,@PathParam("noteId") Long noteId,NoteReq noteReq){
         Note note = noteDao.get(noteId);
         note.setText(noteReq.getNote());
         note.setTitle(noteReq.getTitle());
@@ -52,14 +54,14 @@ public class NoteResource {
     @GET
     @Path("/{noteId}")
     @UnitOfWork
-    public Response get(@PathParam("userID")Long userId,@PathParam("noteId") Long noteId){
+    public Response get(@Auth UserPrincipal userPrincipal, @PathParam("userID")Long userId, @PathParam("noteId") Long noteId){
         Note note = noteDao.get(noteId);
         return Response.ok(converter.convertFromDomain(note)).build();
     }
 
     @POST
     @UnitOfWork
-    public Response post(@PathParam("userID")Long userId, @Valid  NoteReq noteReq){
+    public Response post( @Auth UserPrincipal userPrincipal,@PathParam("userID")Long userId, @Valid  NoteReq noteReq){
         Note note = noteDao.save(userId, converter.convertToDomain(noteReq));
         return Response.ok(converter.convertFromDomain(note)).status(Response.Status.CREATED).build();
     }
