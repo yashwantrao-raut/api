@@ -24,6 +24,16 @@ public class NoteResource {
         this.noteDao=noteDao;
     }
 
+
+
+    @GET
+    @Path("/{noteId}")
+    @UnitOfWork
+    public Response get(@PathParam("userID")Long userId,@PathParam("noteId") Long noteId){
+        Note note = noteDao.get(noteId);
+        return Response.ok(converter.convertFromDomain(note)).build();
+    }
+
     @POST
     @UnitOfWork
     public Response post(@PathParam("userID")Long userId, @Valid  NoteReq noteReq){

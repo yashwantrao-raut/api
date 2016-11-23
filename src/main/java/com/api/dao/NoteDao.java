@@ -15,4 +15,8 @@ public class NoteDao extends AbstractDAO<Note>{
         note.setUser(currentSession().load(User.class, userId));
         return super.persist(note);
     }
+
+    public Note get(Long noteId){
+        return super.get(noteId);
+    }
 }
