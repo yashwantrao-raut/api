@@ -24,6 +24,15 @@ public class NoteResource {
         this.converter = converter;
         this.noteDao=noteDao;
     }
+
+    @DELETE
+    @Path("/{noteId}")
+    @UnitOfWork
+    public Response delete(@PathParam("userID")Long userId,@PathParam("noteId") Long noteId){
+        noteDao.delete(noteId);
+        return Response.ok().build();
+    }
+
     @PUT
     @Path("/{noteId}")
     @UnitOfWork
