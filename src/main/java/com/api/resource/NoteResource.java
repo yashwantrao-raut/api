@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.function.BiPredicate;
 
 @Path("/users/{userID}/notes")
 @Produces(MediaType.APPLICATION_JSON)
@@ -22,6 +23,8 @@ public class NoteResource {
    private NoteToAndFromDomainConverter  converter;
     private NoteDao noteDao;
 
+    private BiPredicate<Long,Long> isUserValid = (principalUserId, pathParamUerId) ->principalUserId.equals(pathParamUerId);
+
     public NoteResource(NoteToAndFromDomainConverter converter,NoteDao noteDao) {
         this.converter = converter;
         this.noteDao=noteDao;
@@ -30,7 +33,10 @@ public class NoteResource {
     @DELETE
     @Path("/{noteId}")
     @UnitOfWork
-    public Response delete(@Auth UserPrincipal userPrincipal,@PathParam("userID")Long userId,@PathParam("noteId") Long noteId){
+    public Response delete(@Auth UserPrincipal principal,@PathParam("userID")Long userId,@PathParam("noteId") Long noteId){
+        if(!isUserValid.test(principal.getUserId(),userId)){
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
         noteDao.delete(noteId);
         return Response.ok().build();
     }
@@ -38,7 +44,10 @@ public class NoteResource {
     @PUT
     @Path("/{noteId}")
     @UnitOfWork
-    public Response put(@Auth UserPrincipal userPrincipal,@PathParam("userID")Long userId,@PathParam("noteId") Long noteId,NoteReq noteReq){
+    public Response put(@Auth UserPrincipal principal,@PathParam("userID")Long userId,@PathParam("noteId") Long noteId,NoteReq noteReq){
+        if(!isUserValid.test(principal.getUserId(),userId)){
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
         Note note = noteDao.get(noteId);
         note.setText(noteReq.getNote());
         note.setTitle(noteReq.getTitle());
@@ -54,14 +63,20 @@ public class NoteResource {
     @GET
     @Path("/{noteId}")
     @UnitOfWork
-    public Response get(@Auth UserPrincipal userPrincipal, @PathParam("userID")Long userId, @PathParam("noteId") Long noteId){
+    public Response get(@Auth UserPrincipal principal,@PathParam("userID")Long userId, @PathParam("noteId") Long noteId){
+        if(!isUserValid.test(principal.getUserId(),userId)){
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
         Note note = noteDao.get(noteId);
         return Response.ok(converter.convertFromDomain(note)).build();
     }
 
     @POST
     @UnitOfWork
-    public Response post( @Auth UserPrincipal userPrincipal,@PathParam("userID")Long userId, @Valid  NoteReq noteReq){
+    public Response post(@Auth UserPrincipal principal,@PathParam("userID")Long userId, @Valid  NoteReq noteReq){
+        if(!isUserValid.test(principal.getUserId(),userId)){
+           return Response.status(Response.Status.FORBIDDEN).build();
+        }
         Note note = noteDao.save(userId, converter.convertToDomain(noteReq));
         return Response.ok(converter.convertFromDomain(note)).status(Response.Status.CREATED).build();
     }
