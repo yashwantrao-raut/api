@@ -1,6 +1,10 @@
 package com.api.resource.req;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 public class NoteReq {
 
+    @NotBlank
     private String title;
     private String note;
 
