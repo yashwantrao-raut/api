@@ -36,10 +36,9 @@ public class Note {
     @JoinColumn(name="user_id",referencedColumnName="id",insertable=false, updatable=false)
     private User user;
 
-    public Note(String title, String text,DateTime createTime,DateTime lastUpdateTime, User user) {
+    public Note(String title, String text,DateTime createTime,DateTime lastUpdateTime) {
         this.title = title;
         this.text = text;
-        this.user=user;
         this.createTime=createTime;
         this.lastUpdateTime=lastUpdateTime;
     }
