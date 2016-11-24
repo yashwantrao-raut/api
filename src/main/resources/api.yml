@@ -9,7 +9,7 @@ server:
 database:
   driverClass: com.mysql.jdbc.Driver
   user: root
-  url: jdbc:mysql://localhost/test
+  url: jdbc:mysql://localhost/api
   properties:
     charSet: UTF-8
     hibernate.dialect: org.hibernate.dialect.MySQLDialect
