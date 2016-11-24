@@ -28,4 +28,8 @@ public class UserDao extends AbstractDAO<User>{
         session.close();
         return user;
     }
+
+    public User save(User user) {
+        return super.persist(user);
+    }
 }
