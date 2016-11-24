@@ -6,6 +6,8 @@ import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
+import java.util.Optional;
+
 public class NoteDao extends AbstractDAO<Note>{
 
     public NoteDao(SessionFactory sessionFactory) {
@@ -17,16 +19,15 @@ public class NoteDao extends AbstractDAO<Note>{
         return super.persist(note);
     }
 
-    public Note get(Long noteId){
-        return super.get(noteId);
+    public Optional<Note> get(Long noteId){
+        return Optional.ofNullable(super.get(noteId));
     }
 
     public Note update(Note note){
         return super.persist(note);
     }
 
-    public void delete(Long noteId) {
-        Note load = currentSession().load(Note.class, noteId);
-        currentSession().delete(load);
+    public void delete(Note note) {
+        currentSession().delete(note);
     }
 }

@@ -2,6 +2,7 @@ package com.api.resource;
 
 import com.api.converter.UserToAndFromDomainConverter;
 import com.api.dao.UserDao;
+import com.api.domain.User;
 import com.api.resource.req.UserReq;
 import io.dropwizard.hibernate.UnitOfWork;
 
@@ -25,11 +26,10 @@ public class UserResource {
         this.converter=converter;
     }
 
-
     @POST
     @UnitOfWork
     public Response post(UserReq userReq){
-        userDao.save(converter.convertToDomain(userReq));
-        return Response.ok().status(Response.Status.CREATED).build();
+        User user = userDao.save(converter.convertToDomain(userReq));
+        return Response.ok(user.getId()).status(Response.Status.CREATED).build();
     }
 }

@@ -37,7 +37,8 @@ public class NoteResource {
         if(!isUserValid.test(principal.getUserId(),userId)){
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        noteDao.delete(noteId);
+        Note note = noteDao.get(noteId).orElseThrow(NotFoundException::new);
+        noteDao.delete(note);
         return Response.ok().build();
     }
 
@@ -48,7 +49,7 @@ public class NoteResource {
         if(!isUserValid.test(principal.getUserId(),userId)){
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        Note note = noteDao.get(noteId);
+        Note note = noteDao.get(noteId).orElseThrow(NotFoundException::new);
         note.setText(noteReq.getNote());
         note.setTitle(noteReq.getTitle());
         note.setLastUpdateTime(DateTime.now());
@@ -67,7 +68,7 @@ public class NoteResource {
         if(!isUserValid.test(principal.getUserId(),userId)){
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        Note note = noteDao.get(noteId);
+        Note note = noteDao.get(noteId).orElseThrow(NotFoundException::new);
         return Response.ok(converter.convertFromDomain(note)).build();
     }
 
