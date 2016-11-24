@@ -12,9 +12,9 @@ public class Note {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "title" ,nullable = false)
+    @Column(name = "title" ,nullable = false ,unique = true,length = 50)
     private String title;
-    @Column(name = "text",nullable = false)
+    @Column(name = "text",nullable = false,unique = true,length = 100)
     private String text;
 
     @Column(name = "createTime",nullable = false)
