@@ -9,7 +9,7 @@ import com.api.dao.NoteDao;
 import com.api.dao.UserDao;
 import com.api.domain.Note;
 import com.api.domain.User;
-import com.api.provider.java.sql.HibernateConstraintViolationExceptionMapper;
+import com.api.provider.HibernateConstraintViolationExceptionMapper;
 import com.api.resource.NoteResource;
 import com.api.resource.UserResource;
 import io.dropwizard.Application;
