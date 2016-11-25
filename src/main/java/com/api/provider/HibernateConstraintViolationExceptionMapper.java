@@ -1,4 +1,4 @@
-package com.api.provider.java.sql;
+package com.api.provider;
 
 import org.hibernate.exception.ConstraintViolationException;
 
