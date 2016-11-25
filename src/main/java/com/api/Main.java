@@ -9,6 +9,7 @@ import com.api.dao.NoteDao;
 import com.api.dao.UserDao;
 import com.api.domain.Note;
 import com.api.domain.User;
+import com.api.provider.java.sql.HibernateConstraintViolationExceptionMapper;
 import com.api.resource.NoteResource;
 import com.api.resource.UserResource;
 import io.dropwizard.Application;
@@ -44,6 +45,8 @@ public class Main extends Application<ApiConfig> {
                         .buildAuthFilter());
         environment.jersey().register(authDynamicFeature);
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserPrincipal.class));
+        environment.jersey().register(new HibernateConstraintViolationExceptionMapper());
+
         environment.jersey().register(new NoteResource(new NoteToAndFromDomainConverter(),new NoteDao(hibernate.getSessionFactory())));
         environment.jersey().register(new UserResource(userDao,new UserToAndFromDomainConverter()));
     }
