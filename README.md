@@ -2,7 +2,7 @@
  
  1. git clone and open in editor -Intellij Idea
  
- 2. make mysql server locally up and create database *test*
+ 2. make mysql server locally up and create database *api*
  
  3.Add new Run configuration to run application
  

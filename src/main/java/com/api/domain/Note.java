@@ -12,9 +12,9 @@ public class Note {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "title" ,nullable = false)
+    @Column(name = "title" ,nullable = false ,unique = true,length = 50)
     private String title;
-    @Column(name = "text",nullable = false)
+    @Column(name = "text",nullable = false,unique = true,length = 100)
     private String text;
 
     @Column(name = "createTime",nullable = false)
@@ -84,5 +84,27 @@ public class Note {
 
     public void setLastUpdateTime(DateTime lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Note note = (Note) o;
+
+        if (!id.equals(note.id)) return false;
+        if (!title.equals(note.title)) return false;
+        if (!text.equals(note.text)) return false;
+        else return true;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + title.hashCode();
+        result = 31 * result + text.hashCode();
+        return result;
     }
 }

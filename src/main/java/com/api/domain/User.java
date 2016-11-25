@@ -1,7 +1,8 @@
 package com.api.domain;
 
+import org.joda.time.DateTime;
+
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,8 +24,11 @@ public class User {
     @Column(name = "email",nullable = false,unique = true)
     private String email;
 
-    @Column(name = "dateTime",nullable = false)
-    private LocalDateTime dateTime;
+    @Column(name = "creationDateTime",nullable = false)
+    private DateTime creationDateTime;
+
+    @Column(name = "lastUpdateDateTime",nullable = false)
+    private DateTime lastUpdateDateTime;
 
     @OneToMany(cascade= CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName="id" ,nullable = false)
@@ -63,13 +67,22 @@ public class User {
         this.email = email;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public DateTime getCreationDateTime() {
+        return creationDateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setCreationDateTime(DateTime creationDateTime) {
+        this.creationDateTime = creationDateTime;
     }
+
+    public DateTime getLastUpdateDateTime() {
+        return lastUpdateDateTime;
+    }
+
+    public void setLastUpdateDateTime(DateTime lastUpdateDateTime) {
+        this.lastUpdateDateTime = lastUpdateDateTime;
+    }
+
     public Set<Note> getNotes() {
         return notes;
     }
@@ -78,13 +91,19 @@ public class User {
         this.notes = notes;
     }
 
-    public User(Set<Note> notes, String name, String password, String email) {
+    public User(Set<Note> notes, String name, String password, String email,DateTime creationDateTime) {
+        this(notes,name,password,email,creationDateTime,DateTime.now());
+    }
+
+    public User(Set<Note> notes, String name, String password, String email, DateTime creationDateTime, DateTime lastUpdateDateTime) {
         this.notes = notes;
         this.name = name;
         this.password = password;
         this.email = email;
+        this.creationDateTime=creationDateTime;
+        this.lastUpdateDateTime=lastUpdateDateTime;
     }
+    public User(){
 
-    public User() {
     }
 }
