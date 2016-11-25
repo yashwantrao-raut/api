@@ -9,6 +9,7 @@ import io.dropwizard.hibernate.UnitOfWork;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Optional;
 
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
@@ -18,26 +19,32 @@ public class UserResource {
     private UserDao userDao;
     private UserToAndFromDomainConverter converter;
 
-    public UserResource(UserDao userDao,UserToAndFromDomainConverter converter) {
+    public UserResource(UserDao userDao, UserToAndFromDomainConverter converter) {
         this.userDao = userDao;
-        this.converter=converter;
+        this.converter = converter;
     }
 
     @GET
     @Path("/createdefault")
     @UnitOfWork
-    public Response loadDefaultUser(){
+    public Response loadDefaultUser() {
         UserReq userReq = new UserReq();
         userReq.setName("admin");
         userReq.setPassword("password");
         userReq.setEmail("admin@api.com");
-        User user = userDao.save(converter.convertToDomain(userReq));
+        Optional<User> dbUser = userDao.find(userReq.getName(), userReq.getPassword());
+        User user;
+        if (!dbUser.isPresent()) {
+            user = userDao.save(converter.convertToDomain(userReq));
+        } else {
+            user = dbUser.get();
+        }
         return Response.ok(converter.convertFromDomain(user)).status(Response.Status.CREATED).build();
     }
 
     @POST
     @UnitOfWork
-    public Response post(UserReq userReq){
+    public Response post(UserReq userReq) {
         User user = userDao.save(converter.convertToDomain(userReq));
         return Response.ok(user.getId()).status(Response.Status.CREATED).build();
     }
